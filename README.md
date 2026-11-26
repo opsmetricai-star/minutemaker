@@ -12,13 +12,14 @@ AI meeting notes: upload a recording (or paste a transcript) and get a transcrip
 ## Environment variables (also set in Vercel)
 | Name | Purpose |
 |---|---|
-| `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Browser + server Supabase client |
-| `SUPABASE_SERVICE_ROLE_KEY` | Server only: contact form, admin plan activation |
+| `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Browser and server Supabase client |
+| `SUPABASE_SERVICE_ROLE_KEY` | Server only: admin plan activation |
 | `GEMINI_API_KEY`, `GEMINI_MODEL` | Server-only AI processing and chat |
 | `ADMIN_SECRET` | 16+ char secret guarding `/api/admin/activate` |
+| `NEXT_PUBLIC_SITE_URL` | Live site URL used in confirmation and reset emails (never localhost in production) |
 
 ## Payments
-Plan links (Selar) live in `src/lib/config.ts`. **Assumption:** `47plan`→Pro ($47), `57plan`→Business ($57), `97plan`→Scale ($97) — edit if wrong.
+Plan links (Selar) live in `src/lib/config.ts`. **Assumption:** `47plan`→Pro ($47), `57plan`→Business ($57), `97plan`→Scale ($97). Edit if wrong.
 A redirect never grants access. Users submit a payment reference in Dashboard → Billing (creates a `pending` row in `payment_claims`). After you verify the payment in Selar, activate it:
 
 ```

@@ -23,7 +23,7 @@ export default async function Settings() {
         <label className="block text-sm font-semibold">Email<input disabled value={p?.email ?? user!.email ?? ""} className="mt-1 w-full rounded-xl border border-line bg-panel px-4 py-3 font-normal" /></label>
         <button className="rounded-xl bg-brand-600 px-6 py-3 font-bold text-white hover:bg-brand-700">Save</button>
       </form>
-      <p className="mt-6 text-sm text-muted">To change your password, use “Forgot password” on the login page. To delete your account, contact support.</p>
+      <p className="mt-6 text-sm text-muted">To change your password, select Forgot password on the log in page.</p>
     </div>
   );
 }

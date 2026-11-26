@@ -18,7 +18,7 @@ export default async function DashLayout({ children }: { children: React.ReactNo
   const pct = Math.min(100, Math.round((usedMinutes / plan.minutesPerMonth) * 100));
 
   return (
-    <div className="min-h-screen bg-panel/60 lg:grid lg:grid-cols-[250px_1fr]">
+    <div className="min-h-screen bg-panel/60 lg:grid grid-cols-1 lg:grid-cols-[250px_1fr]">
       <aside className="border-b border-line bg-white lg:min-h-screen lg:border-b-0 lg:border-r">
         <div className="flex items-center justify-between px-5 pt-5 lg:block"><Logo /></div>
         <DashNav />
@@ -36,7 +36,7 @@ export default async function DashLayout({ children }: { children: React.ReactNo
             </summary>
             <div className="absolute right-0 z-30 mt-2 w-80 rounded-2xl border border-line bg-white p-4 shadow-xl">
               <p className="mb-2 text-sm font-bold">Notifications</p>
-              {(notes ?? []).length === 0 && <p className="text-sm text-muted">Nothing yet.</p>}
+              {(notes ?? []).length === 0 && <p className="text-sm text-muted">No notifications.</p>}
               {(notes ?? []).map((n) => <div key={n.id} className="border-t border-line py-2 first:border-0"><p className="text-sm font-semibold">{n.title}</p><p className="text-xs text-muted">{n.body}</p></div>)}
             </div>
           </details>

@@ -5,9 +5,9 @@ import "./globals.css";
 const figtree = Figtree({ variable: "--font-figtree", subsets: ["latin"], weight: ["300", "400", "500", "600", "700"] });
 
 export const metadata: Metadata = {
-  title: "MinuteMaker — AI meeting notes, summaries and action items",
+  title: "MinuteMaker | AI meeting intelligence for business teams",
   description:
-    "MinuteMaker records, transcribes and summarizes every meeting, then turns the conversation into searchable knowledge and follow-ups.",
+    "MinuteMaker is the AI engine that analyzes every business meeting, extracts decisions and commitments with owners and deadlines, and automates the follow-through.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

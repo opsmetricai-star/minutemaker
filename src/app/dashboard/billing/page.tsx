@@ -22,15 +22,15 @@ export default async function Billing() {
       </div>
 
       <h2 className="mt-10 text-xl font-semibold">Upgrade</h2>
-      <div className="mt-4 grid gap-4 sm:grid-cols-3">
+      <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-3">
         {PLANS.filter((p) => p.external).map((p) => (
           <div key={p.id} className="rounded-2xl bg-white p-5"><p className="font-semibold">{p.name}</p><p className="text-2xl font-semibold">${p.price}<span className="text-sm font-normal text-muted">/mo</span></p><p className="mt-1 text-sm text-muted">{p.minutesPerMonth.toLocaleString()} min/month</p>
             <a href={p.href} target="_blank" rel="noopener noreferrer" className="mt-4 block rounded-xl bg-brand-600 py-2.5 text-center text-sm font-bold text-white hover:bg-brand-700">Pay for {p.name}</a></div>
         ))}
       </div>
 
-      <h2 className="mt-10 text-xl font-semibold">I&apos;ve paid</h2>
-      <p className="mt-1 text-sm text-muted">After checkout, enter the reference from your receipt. Access is granted only after the payment is verified — completing checkout alone does not upgrade your account.</p>
+      <h2 className="mt-10 text-xl font-semibold">Confirm a payment</h2>
+      <p className="mt-1 text-sm text-muted">After checkout, enter the reference from your receipt. Access is granted only after the payment is verified. Completing checkout alone does not upgrade an account.</p>
       <BillingClaim />
 
       {(claims ?? []).length > 0 && (

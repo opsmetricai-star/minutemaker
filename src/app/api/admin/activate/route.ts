@@ -36,7 +36,7 @@ export async function POST(req: Request) {
     await admin.from("profiles").update({ plan: claim.plan, plan_expires_at: expires }).eq("id", claim.user_id);
     await admin.from("notifications").insert({ user_id: claim.user_id, title: "Plan activated", body: `Your ${claim.plan} plan is active for ${days} days.` });
   } else {
-    await admin.from("notifications").insert({ user_id: claim.user_id, title: "Payment not verified", body: "We could not verify that payment reference. Contact support." });
+    await admin.from("notifications").insert({ user_id: claim.user_id, title: "Payment not verified", body: "We could not verify that payment reference. Please check the reference and submit it again from Billing." });
   }
   await admin.from("payment_claims").update({ status: decision === "approve" ? "approved" : "rejected" }).eq("id", claimId);
   return NextResponse.json({ ok: true });

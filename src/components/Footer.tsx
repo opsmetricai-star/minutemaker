@@ -2,20 +2,19 @@ import Link from "next/link";
 import { Logo } from "./Logo";
 
 const cols: { h: string; links: [string, string][] }[] = [
-  { h: "Product", links: [["Pricing", "/pricing"], ["Enterprise", "/enterprise"], ["Download", "/download"], ["Start for free", "/signup"], ["Log in", "/login"]] },
-  { h: "Use cases", links: [["Sales", "/use-cases/sales"], ["Education", "/use-cases/education"], ["Media", "/use-cases/media"]] },
-  { h: "Resources", links: [["Blog & guides", "/resources"], ["Help center", "/help"], ["Schedule demo", "/contact?topic=demo"]] },
-  { h: "Company", links: [["About", "/about"], ["Contact", "/contact"], ["Security", "/enterprise#security"], ["Privacy policy", "/about#privacy"], ["Terms of service", "/about#terms"]] },
+  { h: "Product", links: [["Pricing", "/pricing"], ["Enterprise", "/enterprise"], ["Sign up", "/signup"], ["Log in", "/login"]] },
+  { h: "Use cases", links: [["Sales", "/use-cases/sales"], ["Education and training", "/use-cases/education"], ["Media and production", "/use-cases/media"]] },
+  { h: "Company", links: [["About", "/about"], ["Help", "/help"], ["Privacy", "/privacy"], ["Terms", "/terms"]] },
 ];
 
 export function Footer() {
   return (
     <footer className="border-t border-line bg-white">
-      <div className="mx-auto grid max-w-[1280px] gap-10 px-5 py-14 md:grid-cols-6 lg:px-8">
+      <div className="mx-auto grid grid-cols-1 max-w-[1280px] gap-10 px-5 py-14 md:grid-cols-5 lg:px-8">
         <div className="md:col-span-2">
           <Logo />
           <p className="mt-4 max-w-xs text-sm leading-relaxed text-muted">
-            Your meetings, captured and made searchable. MinuteMaker writes the notes so you can run the conversation.
+            The AI engine that turns business conversations into decisions, owners and action.
           </p>
         </div>
         {cols.map((c) => (
@@ -30,9 +29,8 @@ export function Footer() {
         ))}
       </div>
       <div className="border-t border-line">
-        <div className="mx-auto flex max-w-[1280px] flex-col gap-2 px-5 py-6 text-xs text-muted sm:flex-row sm:justify-between lg:px-8">
-          <span>© {new Date().getFullYear()} MinuteMaker. All rights reserved.</span>
-          <span>Built with care for people who live in meetings.</span>
+        <div className="mx-auto max-w-[1280px] px-5 py-6 text-xs text-muted lg:px-8">
+          © {new Date().getFullYear()} MinuteMaker. All rights reserved.
         </div>
       </div>
     </footer>

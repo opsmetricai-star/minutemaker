@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 
@@ -18,8 +19,8 @@ export function Btn({ href, children, variant = "solid", className = "" }: { hre
     white: "bg-white text-brand-800 hover:bg-brand-50 border border-white",
   }[variant];
   return (
-    <a href={href} className={`inline-flex items-center justify-center rounded-2xl px-7 py-3.5 text-[15px] font-bold transition ${v} ${className}`}>
+    <Link href={href} className={`inline-flex items-center justify-center rounded-2xl px-7 py-3.5 text-[15px] font-bold transition ${v} ${className}`}>
       {children}
-    </a>
+    </Link>
   );
 }

@@ -1,6 +1,6 @@
 @import "tailwindcss";
 
-/* MinuteMaker design tokens — layout/typography follow the reference, palette is GREEN */
+/* MinuteMaker design tokens */
 @theme inline {
   --color-brand-50: #ecfdf3;
   --color-brand-100: #d1fae0;

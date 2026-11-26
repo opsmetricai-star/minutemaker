@@ -1,16 +1,14 @@
-// Single source of truth for plans. Payment URLs are the Selar links supplied by the owner.
-// NOTE: the mapping of Selar links to plan names is an assumption — edit here if it differs.
+// Single source of truth for plans. Payment URLs are the checkout links supplied by the owner.
+// The mapping of checkout links to plan names is an assumption: edit here if it differs.
 export type PlanId = "basic" | "pro" | "business" | "scale";
 
 export interface Plan {
   id: PlanId;
   name: string;
   tagline: string;
-  price: number | null;
-  was?: number;
-  blurb?: string;
-  cta: string;
-  href: string; // payment or signup URL
+  price: number;
+  badge?: string;
+  href: string;
   external?: boolean;
   minutesPerMonth: number;
   features: string[];
@@ -21,70 +19,62 @@ export const PLANS: Plan[] = [
   {
     id: "basic",
     name: "Basic",
-    tagline: "For those who want to give it a try",
+    tagline: "Evaluate the AI engine with your team",
     price: 0,
-    cta: "Get started",
     href: "/signup",
     minutesPerMonth: 300,
     features: [
-      "Works with Zoom, Teams and Google Meet recordings",
       "300 transcription minutes per month",
-      "30-minute limit per recording",
-      "AI summary and action items",
-      "3 AI chat questions per meeting",
+      "Recordings up to 30 minutes",
+      "AI summary, decisions and action items",
+      "3 AI questions per meeting",
     ],
   },
   {
     id: "pro",
     name: "Pro",
-    tagline: "For individuals and small teams",
+    tagline: "For small teams running weekly pipelines",
     price: 47,
-    cta: "Buy now",
     href: "https://selar.com/47plan?currency=USD",
     external: true,
     minutesPerMonth: 1200,
     features: [
       "1,200 transcription minutes per month",
-      "4-hour limit per recording",
-      "Unlimited AI chat across your meetings",
-      "Custom vocabulary and speaker labels",
-      "Export to text, Markdown and JSON",
+      "Unlimited AI questions per meeting",
+      "Cross-meeting AI search",
+      "Full commitments register with owners and deadlines",
     ],
   },
   {
     id: "business",
     name: "Business",
-    tagline: "For medium-sized teams",
+    tagline: "For teams with daily meeting volume",
     price: 57,
-    blurb: "Best value",
-    cta: "Buy now",
+    badge: "Best value",
     href: "https://selar.com/57plan?currency=USD",
     external: true,
     minutesPerMonth: 6000,
     best: true,
     features: [
-      "Unlimited meetings, 6,000 minutes per month",
-      "Shared team workspace and folders",
-      "Workflow automations and follow-up drafts",
-      "Usage analytics and admin controls",
-      "Priority support",
+      "6,000 transcription minutes per month",
+      "Unlimited AI questions per meeting",
+      "Cross-meeting AI search",
+      "Capacity for multi-team operations",
     ],
   },
   {
     id: "scale",
     name: "Scale",
-    tagline: "For large teams and companies",
+    tagline: "For organizations with high meeting volume",
     price: 97,
-    cta: "Buy now",
     href: "https://selar.com/97plan?currency=USD",
     external: true,
     minutesPerMonth: 30000,
     features: [
       "30,000 transcription minutes per month",
-      "Unlimited custom AI workflows",
-      "SSO-ready security review",
-      "Dedicated onboarding and success manager",
-      "Custom data retention",
+      "Unlimited AI questions per meeting",
+      "Cross-meeting AI search",
+      "Capacity for organization-wide rollout",
     ],
   },
 ];

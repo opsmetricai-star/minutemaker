@@ -4,7 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 
 const body = z.object({ plan: z.enum(["pro", "business", "scale"]), reference: z.string().trim().min(3).max(200) });
 
-// Records a payment claim. It does NOT grant access — an admin verifies the payment and activates the plan.
+// Records a payment claim. It does NOT grant access: an administrator verifies the payment and activates the plan.
 export async function POST(req: Request) {
   const sb = await createClient();
   const { data: { user } } = await sb.auth.getUser();

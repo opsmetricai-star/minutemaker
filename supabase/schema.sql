@@ -88,7 +88,7 @@ drop policy if exists "own claims read" on public.payment_claims;
 create policy "own claims read" on public.payment_claims for select using (auth.uid() = user_id);
 drop policy if exists "own claims insert" on public.payment_claims;
 create policy "own claims insert" on public.payment_claims for insert with check (auth.uid() = user_id and status = 'pending');
--- contact_messages: no policies → only the service role (API route) can insert/read.
+-- contact_messages: no policies: only the service role can read or write.
 
 -- Create profile on signup
 create or replace function public.handle_new_user() returns trigger

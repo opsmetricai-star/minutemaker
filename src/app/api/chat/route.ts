@@ -12,7 +12,7 @@ export async function POST(req: Request) {
   const { data: { user } } = await sb.auth.getUser();
   if (!user) return NextResponse.json({ error: "Please log in." }, { status: 401 });
   const parsed = body.safeParse(await req.json().catch(() => null));
-  if (!parsed.success) return NextResponse.json({ error: "Ask a question (2–1000 characters)." }, { status: 400 });
+  if (!parsed.success) return NextResponse.json({ error: "Ask a question (2 to 1000 characters)." }, { status: 400 });
   const { meetingId = null, question } = parsed.data;
   const { plan } = await getProfileAndUsage(sb, user.id);
 

@@ -14,7 +14,7 @@ export async function createClient() {
         try {
           list.forEach(({ name, value, options }) => store.set(name, value, options));
         } catch {
-          /* called from a Server Component — session refresh handled by proxy */
+          /* called from a Server Component, session refresh is handled by the proxy */
         }
       },
     },

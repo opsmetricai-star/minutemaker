@@ -31,7 +31,7 @@ export default function NewMeeting() {
         const file = f.get("file") as File;
         if (!file || !file.size) throw new Error("Choose an audio file.");
         if (file.size > MAX) throw new Error("File is larger than 20 MB.");
-        setBusy("Uploading…");
+        setBusy("Uploading recording");
         const sb = createClient();
         const { data: { user } } = await sb.auth.getUser();
         if (!user) throw new Error("Please log in again.");
@@ -42,7 +42,7 @@ export default function NewMeeting() {
       } else {
         payload = { title, source: "paste", transcript: String(f.get("transcript") ?? "") };
       }
-      setBusy("Transcribing and summarizing… this can take a minute or two.");
+      setBusy("The AI is transcribing and analyzing your meeting. This can take a minute or two.");
       const res = await fetch("/api/meetings/process", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
       const j = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(j.error ?? "Processing failed.");
@@ -63,7 +63,7 @@ export default function NewMeeting() {
         <input name="title" required maxLength={160} placeholder="Meeting title" className={input} />
         {tab === "upload"
           ? <input name="file" type="file" accept="audio/*,video/webm,video/mp4" className={`${input} file:mr-4 file:rounded-lg file:border-0 file:bg-brand-100 file:px-4 file:py-2 file:font-semibold file:text-brand-800`} />
-          : <textarea name="transcript" rows={10} required placeholder="Paste the transcript or your raw notes here…" className={input} />}
+          : <textarea name="transcript" rows={10} required placeholder="Paste the meeting transcript or raw notes" className={input} />}
         {err && <p className="rounded-xl bg-red-50 p-3 text-sm text-red-700">{err}</p>}
         {busy && <p className="rounded-xl bg-brand-50 p-3 text-sm text-brand-800">{busy}</p>}
         <button disabled={!!busy} className="rounded-2xl bg-brand-600 px-8 py-3.5 font-bold text-white hover:bg-brand-700 disabled:opacity-60">Process meeting</button>
