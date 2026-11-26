@@ -70,16 +70,23 @@ alter table public.notifications enable row level security;
 alter table public.payment_claims enable row level security;
 alter table public.contact_messages enable row level security;
 
+drop policy if exists "own profile read" on public.profiles;
 create policy "own profile read" on public.profiles for select using (auth.uid() = id);
 -- users may change their name only; plan is changed by service role after verified payment
+drop policy if exists "own profile update" on public.profiles;
 create policy "own profile update" on public.profiles for update using (auth.uid() = id) with check (auth.uid() = id);
 revoke update on public.profiles from authenticated;
 grant update (full_name) on public.profiles to authenticated;
 
+drop policy if exists "own meetings all" on public.meetings;
 create policy "own meetings all" on public.meetings for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+drop policy if exists "own chat all" on public.chat_messages;
 create policy "own chat all" on public.chat_messages for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+drop policy if exists "own notifications all" on public.notifications;
 create policy "own notifications all" on public.notifications for all using (auth.uid() = user_id) with check (auth.uid() = user_id);
+drop policy if exists "own claims read" on public.payment_claims;
 create policy "own claims read" on public.payment_claims for select using (auth.uid() = user_id);
+drop policy if exists "own claims insert" on public.payment_claims;
 create policy "own claims insert" on public.payment_claims for insert with check (auth.uid() = user_id and status = 'pending');
 -- contact_messages: no policies → only the service role (API route) can insert/read.
 
@@ -98,9 +105,20 @@ create trigger on_auth_user_created after insert on auth.users for each row exec
 
 -- Storage: private bucket, files under <user_id>/...
 insert into storage.buckets (id, name, public) values ('recordings', 'recordings', false) on conflict do nothing;
+drop policy if exists "recordings insert own" on storage.objects;
 create policy "recordings insert own" on storage.objects for insert to authenticated
   with check (bucket_id = 'recordings' and (storage.foldername(name))[1] = auth.uid()::text);
+drop policy if exists "recordings read own" on storage.objects;
 create policy "recordings read own" on storage.objects for select to authenticated
   using (bucket_id = 'recordings' and (storage.foldername(name))[1] = auth.uid()::text);
+drop policy if exists "recordings delete own" on storage.objects;
 create policy "recordings delete own" on storage.objects for delete to authenticated
   using (bucket_id = 'recordings' and (storage.foldername(name))[1] = auth.uid()::text);
+
+-- Table privileges (newer Supabase projects do not auto-grant). RLS still restricts rows.
+grant usage on schema public to anon, authenticated, service_role;
+grant all on all tables in schema public to service_role;
+grant select on public.profiles to authenticated;
+grant select, insert, update, delete on public.meetings, public.chat_messages, public.notifications to authenticated;
+grant select, insert on public.payment_claims to authenticated;
+grant update (full_name) on public.profiles to authenticated;
