@@ -1,26 +1,53 @@
 @import "tailwindcss";
 
+/* MinuteMaker design tokens — layout/typography follow the reference, palette is GREEN */
+@theme inline {
+  --color-brand-50: #ecfdf3;
+  --color-brand-100: #d1fae0;
+  --color-brand-200: #a6f2c4;
+  --color-brand-300: #6ee0a0;
+  --color-brand-400: #34c777;
+  --color-brand-500: #14b266;
+  --color-brand-600: #0b9a55;
+  --color-brand-700: #0a7c46;
+  --color-brand-800: #0a6039;
+  --color-brand-900: #07442a;
+  --color-brand-950: #042b1a;
+  --color-ink: #0c1512;
+  --color-muted: #5b6761;
+  --color-line: #dfe5e1;
+  --color-panel: #f1f3f2;
+  --font-sans: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
+}
+
 :root {
   --background: #ffffff;
-  --foreground: #171717;
+  --foreground: #0c1512;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+html { scroll-behavior: smooth; }
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-figtree), ui-sans-serif, system-ui, sans-serif;
 }
+
+.display { font-weight: 300; letter-spacing: -0.02em; line-height: 1.08; }
+.blob-card {
+  background:
+    radial-gradient(40% 35% at 25% 30%, rgba(110, 224, 160, 0.45), transparent 70%),
+    radial-gradient(45% 40% at 75% 65%, rgba(52, 199, 119, 0.35), transparent 70%),
+    radial-gradient(35% 30% at 60% 20%, rgba(209, 250, 224, 0.9), transparent 70%),
+    #f7fbf9;
+}
+.deep-section {
+  background:
+    linear-gradient(115deg, rgba(255,255,255,0.06) 0 22%, transparent 22% 100%),
+    linear-gradient(240deg, rgba(255,255,255,0.05) 0 18%, transparent 18% 100%),
+    #0a7c46;
+}
+@keyframes floaty { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-8px) } }
+.floaty { animation: floaty 6s ease-in-out infinite; }
+@keyframes rise { from { opacity: 0; transform: translateY(14px) } to { opacity: 1; transform: none } }
+.rise { animation: rise .7s ease both; }
+@keyframes bar { 0%,100% { height: 20% } 50% { height: 100% } }
