@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI, type Part } from "@google/generative-ai";
 import { z } from "zod";
 
 export const analysisSchema = z.object({
@@ -12,11 +12,36 @@ export const analysisSchema = z.object({
 });
 export type Analysis = z.infer<typeof analysisSchema>;
 
-const MODEL = () => process.env.GEMINI_MODEL || "gemini-2.5-flash";
+// Preferred model first, then fallbacks used when a model is overloaded (503/429) or retired (404).
+const MODELS = () =>
+  [...new Set([process.env.GEMINI_MODEL, "gemini-3.5-flash", "gemini-3-flash-preview", "gemini-3.5-flash-lite"].filter(Boolean))] as string[];
+
 function client() {
   const key = process.env.GEMINI_API_KEY;
   if (!key) throw new Error("GEMINI_API_KEY is not configured on the server.");
   return new GoogleGenerativeAI(key);
+}
+
+async function generate(parts: (string | Part)[], opts: { json?: boolean; system?: string }): Promise<string> {
+  const ai = client();
+  let lastErr: unknown;
+  for (const name of MODELS()) {
+    try {
+      const model = ai.getGenerativeModel(
+        {
+          model: name,
+          systemInstruction: opts.system,
+          generationConfig: opts.json ? { responseMimeType: "application/json", temperature: 0.2 } : undefined,
+        },
+        { timeout: 90_000 },
+      );
+      const res = await model.generateContent(parts);
+      return res.response.text();
+    } catch (e) {
+      lastErr = e; // try next model
+    }
+  }
+  throw new Error(`AI service unavailable right now. Please retry shortly. (${lastErr instanceof Error ? lastErr.message.slice(0, 160) : "unknown error"})`);
 }
 
 const INSTRUCTIONS = `You are a meeting-notes engine. Return ONLY JSON with keys:
@@ -27,12 +52,11 @@ action_items (array of {task, owner|null, due|null}). Only include owners/dates 
 duration_seconds (estimated audio length in seconds, or omit for text input).`;
 
 export async function analyzeMeeting(input: { text: string } | { audioBase64: string; mimeType: string }): Promise<Analysis> {
-  const model = client().getGenerativeModel({ model: MODEL(), generationConfig: { responseMimeType: "application/json", temperature: 0.2 } });
-  const parts = "text" in input
-    ? [{ text: `${INSTRUCTIONS}\n\nTRANSCRIPT INPUT:\n${input.text}` }]
-    : [{ text: INSTRUCTIONS }, { inlineData: { data: input.audioBase64, mimeType: input.mimeType } }];
-  const res = await model.generateContent(parts);
-  const raw = res.response.text();
+  const parts: (string | Part)[] =
+    "text" in input
+      ? [`${INSTRUCTIONS}\n\nTRANSCRIPT INPUT:\n${input.text}`]
+      : [INSTRUCTIONS, { inlineData: { data: input.audioBase64, mimeType: input.mimeType } }];
+  const raw = await generate(parts, { json: true });
   let json: unknown;
   try { json = JSON.parse(raw); } catch { throw new Error("The AI returned an unreadable response. Please retry."); }
   const parsed = analysisSchema.safeParse(json);
@@ -41,10 +65,7 @@ export async function analyzeMeeting(input: { text: string } | { audioBase64: st
 }
 
 export async function answerQuestion(context: string, question: string): Promise<string> {
-  const model = client().getGenerativeModel({
-    model: MODEL(),
-    systemInstruction: "You answer questions about the user's meetings using ONLY the provided meeting material. If the answer is not in the material, say so. Be concise. Draft emails or reports when asked.",
+  return generate([`MEETING MATERIAL:\n${context}\n\nQUESTION: ${question}`], {
+    system: "You answer questions about the user's meetings using ONLY the provided meeting material. If the answer is not in the material, say so. Be concise. Draft emails or reports when asked.",
   });
-  const res = await model.generateContent(`MEETING MATERIAL:\n${context}\n\nQUESTION: ${question}`);
-  return res.response.text();
 }
